@@ -17,10 +17,7 @@ class ComercializacaoScraper(BaseScraper):
 
     def parse_content(self, soup: BeautifulSoup) -> Dict[str, Any]:
         # Verifica se possui dados para efetuar o parse
-        if self._is_parsed(soup):
-            return self._html_parse(soup)
-        else:
-            raise "O html não pode ser parseado"
+        return self._html_parse(soup) if self._is_parsed(soup) else "O html não pode ser parseado"
 
     def _is_parsed(self, soup: BeautifulSoup) -> bool:
         """Verifica se possui dados a serem extraidos"""

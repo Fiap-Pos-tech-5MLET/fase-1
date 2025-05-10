@@ -50,7 +50,4 @@ class BaseScraper(ABC):
             raise Exception("Conteúdo não disponível em cache")
 
     def _generate_filename(self, endpoint: str) -> str:
-        hash_object = hashlib.md5(endpoint.encode())
-        hash_digest = hash_object.hexdigest()
-
-        return f"{hash_digest}.html"
+         return f"{hashlib.md5(endpoint.encode()).hexdigest()}.html"

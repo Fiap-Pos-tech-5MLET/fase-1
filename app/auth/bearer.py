@@ -13,23 +13,17 @@ class BearerAuth(HTTPBearer):
 
     async def __call__(self, request):
         credentials: HTTPAuthorizationCredentials = await super(BearerAuth, self).__call__(request)
-        if credentials:
-            if not credentials.scheme == "Bearer":
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN, 
-                    detail="Token de autenticação inválido"
-                )
-            if not self.verify_token(credentials.credentials):
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN, 
-                    detail="Token inválido ou expirado"
-                )
-            return credentials.credentials
-        else:
+        if not credentials:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, 
                 detail="Token de autenticação não fornecido"
             )
+        if credentials.scheme != "Bearer" or not self.verify_token(credentials.credentials):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN, 
+                detail="Token de autenticação inválido"
+            )
+        return credentials.credentials
 
     def verify_token(self, token: str) -> bool:
         return token == self.settings.SECRET_KEY

@@ -27,9 +27,6 @@ class ComercializacaoScraper(BaseScraper):
         data = []
 
         table = soup.find('table', {'class': 'tb_base tb_dados'})
-        # extraindo  as linhas da tabela
-        rows = table.find_all('tr')
-
         for row in table.find_all('tr'):
             cells = row.find_all(['th', 'td'])
 

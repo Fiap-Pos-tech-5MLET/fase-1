@@ -5,8 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 
 from app.config import get_settings
-from app.routes import producao
-from app.routes import comercializacao
+from app.routes import producao ,processamento, comercializacao
 
 settings = get_settings()
 
@@ -28,6 +27,7 @@ app.add_middleware(
 # Incluindo rotas
 app.include_router(producao.router)
 app.include_router(comercializacao.router)
+app.include_router(processamento.router)
 
 @app.get("/")
 async def root():

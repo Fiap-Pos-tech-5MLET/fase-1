@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 from typing import Dict, Any, List
 import os
 import pandas as pd
-from app.utils.helpers import clean_quantity
 
 settings = get_settings()
 
@@ -16,8 +15,9 @@ class ProcessamentoScraper(BaseScraper):
     def _html_parse(self, soup: BeautifulSoup) -> Dict[str, Any]:
         table = soup.find('table', {'class': 'tb_base tb_dados'})
         data = []
+        current_category = ''
         for row in table.find_all('tr'):
-            cells = row.find_all(['th', 'td'])
+            cells = row.find_all(['tr', 'td'])
 
             if len(cells) != 2:  # Pegando apenas linhas com duas células para evitar erros
                 continue
@@ -25,11 +25,10 @@ class ProcessamentoScraper(BaseScraper):
             product_cell, quantity_cell = cells
                 # Identifica o tipo do item, se cabeçalho ou itens
             if 'tb_item' in product_cell.get('class', []) or 'tb_subitem' in product_cell.get('class', []):
-                current_category = product_cell.get_text(strip=True)
+                current_category = product_cell.get_text(strip=True) if 'tb_item' in product_cell.get('class', []) and current_category == '' else current_category
                 data.append({
                     'categoria': current_category,
-                    'subcategoria': current_category if  'tb_subitem' in product_cell.get('class', []) else '-',
+                    'subcategoria': product_cell.get_text(strip=True) if  'tb_subitem' in product_cell.get('class', []) else '-',
                     'quantidade': quantity_cell.get_text(strip=True)
                 })
-
         return self._data_to_dict(data)

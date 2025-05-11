@@ -1,9 +1,11 @@
-from abc import ABC, abstractmethod
-from bs4 import BeautifulSoup
 import requests
-from typing import Dict, Any
 import os
 import hashlib
+import pandas as pd
+from abc import ABC
+from bs4 import BeautifulSoup
+from typing import Dict, Any, List
+from app.utils.helpers import clean_quantity
 
 class BaseScraper(ABC):
     def __init__(self, base_url: str, cache_dir: str):
@@ -11,12 +13,16 @@ class BaseScraper(ABC):
         self.cache_dir = cache_dir
 
         os.makedirs(cache_dir, exist_ok=True)
-        
-    @abstractmethod
+
     def parse_content(self, soup: BeautifulSoup) -> Dict[str, Any]:
-        """Método abstrato para parsear o conteúdo específico de cada html"""
-        pass
-    
+        # Verifica se possui dados para efetuar o parse
+        return self._html_parse(soup) if self._is_parsed(soup) else "O html não pode ser parseado"
+
+    def _is_parsed(self, soup: BeautifulSoup) -> bool:
+        """Verifica se possui dados a serem extraidos"""
+        return soup.find('table', {'class': 'tb_base tb_dados'}) is not None
+
+
     def get_content(self, endpoint: str = "") -> Dict[str, Any]:
         try:
             url = f"{self.base_url}{endpoint}"
@@ -51,3 +57,12 @@ class BaseScraper(ABC):
 
     def _generate_filename(self, endpoint: str) -> str:
          return f"{hashlib.md5(endpoint.encode()).hexdigest()}.html"
+
+
+    def _data_to_dict(self, data: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Converte os dados extraídos para um dicionário.
+        """
+        df = pd.DataFrame(data)
+        df['quantidade'] = df['quantidade'].apply(clean_quantity)
+        return df.to_dict(orient='records')

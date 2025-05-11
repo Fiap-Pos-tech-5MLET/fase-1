@@ -15,14 +15,6 @@ class ComercializacaoScraper(BaseScraper):
             cache_dir=os.path.join(settings.HTML_CACHE_DIR, "comercializacao")
         )
 
-    def parse_content(self, soup: BeautifulSoup) -> Dict[str, Any]:
-        # Verifica se possui dados para efetuar o parse
-        return self._html_parse(soup) if self._is_parsed(soup) else "O html não pode ser parseado"
-
-    def _is_parsed(self, soup: BeautifulSoup) -> bool:
-        """Verifica se possui dados a serem extraidos"""
-        return soup.find('table', {'class': 'tb_base tb_dados'}) is not None
-
     def _html_parse(self, soup: BeautifulSoup) -> Dict[str, Any]:
         data = []
 
@@ -52,8 +44,4 @@ class ComercializacaoScraper(BaseScraper):
                     # Opcional: tratamento para o total
                     pass
 
-        #Converte os dados para um dataframe
-        df = pd.DataFrame(data)
-        df['quantidade'] = df['quantidade'].apply(clean_quantity)
-
-        return df.to_dict(orient='records')
+        return self._data_to_dict(data)

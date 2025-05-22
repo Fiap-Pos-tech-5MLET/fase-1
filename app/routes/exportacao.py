@@ -1,17 +1,38 @@
-from fastapi import APIRouter, HTTPException
-from app.auth.bearer import BearerAuth
+from fastapi import APIRouter,  HTTPException, Depends
 from app.models.responses import ScrapingResponse
 from app.scrapers.exportacao_scraper import ExportacaoScraper
 from app.utils.helpers import valid_is_int
 from datetime import datetime
 
-router = APIRouter(prefix="/api")
-bearer_auth = BearerAuth()
+from app.auth.schemas.dependencies import get_current_user
 
-@router.get("/exportacao/{year}/{tipo_exportacao}", response_model=ScrapingResponse)
-async def route_get_exportacao(year: int = datetime.now().year, tipo_exportacao: str = None):
+router = APIRouter(  prefix="/api",
+    tags=["Exportação"],
+    dependencies=[Depends(get_current_user)])
+
+
+@router.get("/exportacao/{year}/{tipo_exportacao}", response_model=ScrapingResponse, summary="Consultar Exportação por ano e por tipo")
+async def route_get_exportacao(year: int = datetime.now().year, tipo_exportacao: str = None,  current_user: dict = Depends(get_current_user)):
     """
-    Rota para obter a exportação de derivados de uva por ano e tipo.
+    Rota para obter os dados de exportação de derivados de uva do Rio Grande do Sul por ano e tipo de produto.
+
+    Esta rota é **protegida** e requer um token JWT válido no header da requisição.
+
+    As categorias disponíveis são:
+    - `vinhos_de_mesa`
+    - `espumantes`
+    - `uvas_frescas`
+    - `suco_de_uva`
+
+    ### Parâmetros:
+    - `ano`: Ano da consulta (obrigatório)
+    - `categoria`: Tipo de produto exportado (obrigatório)
+
+    ### Exemplo de requisição com `curl`:
+
+    ```bash
+    curl -X GET "http://localhost:8000/api/exportacao/2022?categoria=espumantes" \
+        -H "Authorization: Bearer <seu_token>"
     """
     def get_url(year: int, tipo_exportacao: str):
         dict_sub_opcao = {

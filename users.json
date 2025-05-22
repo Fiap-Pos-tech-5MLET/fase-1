@@ -1,0 +1,23 @@
+{
+    "gabes": {
+        "username": "gabes",
+        "full_name": "gabes",
+        "email": "gabes@example.com",
+        "disabled": false,
+        "hashed_password": "$2b$12$VC7xFuwAbgme22l5SDhTpOs4icShK8j7KNo83muT/29jIPrYvcab2"
+    },
+    "leticia": {
+        "username": "leticia",
+        "full_name": "leticia",
+        "email": "leticia@example.com",
+        "disabled": false,
+        "hashed_password": "$2b$12$h9IO2ir.Gz44dd5Qhl.XGOiSmM35it71v6KNaLfmnHc6S7DfQZ48K"
+    },
+    "gabes33": {
+        "username": "gabes33",
+        "full_name": "gabes33",
+        "email": "gabes33@example.com",
+        "disabled": false,
+        "hashed_password": "$2b$12$B70PUk6IsBZhl1g/zLb1M.qfTj9Gg/rZo4M4mC1voqI3qfAlUfXYO"
+    }
+}

@@ -3,6 +3,7 @@ from app.models.responses import ScrapingResponse
 from app.scrapers.exportacao_scraper import ExportacaoScraper
 from app.utils.helpers import valid_is_int
 from datetime import datetime
+
 from app.auth.schemas.dependencies import get_current_user
 
 router = APIRouter(  prefix="/api",
@@ -32,7 +33,7 @@ async def route_get_exportacao(year: int = datetime.now().year, tipo_exportacao:
     ```bash
     curl -X GET "http://localhost:8000/api/exportacao/2022?categoria=espumantes" \
         -H "Authorization: Bearer <seu_token>"
-"""
+    """
     def get_url(year: int, tipo_exportacao: str):
         dict_sub_opcao = {
             "vinhos_de_mesa": "subopt_01",

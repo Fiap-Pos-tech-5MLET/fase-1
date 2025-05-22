@@ -40,7 +40,6 @@ class BaseScraper(ABC):
         except requests.RequestException:
             # Fallback para HTML local
             return self.get_cached_content(endpoint)
-            
 
     def get_cached_content(self, endpoint: str) -> Dict[str, Any]:
         # Gera o nome do arquivo (md5) com base no endpoint

@@ -37,7 +37,6 @@ app.include_router(processamento.router)
 app.include_router(exportacao.router)
 app.include_router(importacao.router)
 
-
 # Incluindo rotas de AUTENTICAÇÃO
 app.include_router(login.router)
 app.include_router(register.router)

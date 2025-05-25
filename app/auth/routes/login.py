@@ -1,5 +1,6 @@
 # auth/routes/login.py
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from datetime import timedelta
 
@@ -16,7 +17,7 @@ class LoginInput(BaseModel):
     password: str
 
 @router.post("/login", response_model=Token)
-def login(credentials: LoginInput):
+async def login(credentials: LoginInput):
     """
     Rota para autenticação de usuários via login e geração de token JWT.
 
@@ -25,25 +26,38 @@ def login(credentials: LoginInput):
     ### Detalhes da requisição:
     - Método: `POST`
     - Endpoint: `/login`
-    - Tipo de conteúdo: `application/x-www-form-urlencoded`
+    - Tipo de conteúdo: `application/json`
     - Parâmetros:
     - `username`: Nome de usuário registrado.
     - `password`: Senha correspondente ao usuário.
 
     ### Exemplo de requisição com `curl`:
     ```bash
-    curl -X POST "http://localhost:8000/login" \
-        -H "Content-Type: application/x-www-form-urlencoded" \
-        -d "username=seu_usuario&password=sua_senha"
+    curl -X POST "http://localhost:8000/api/login" \
+        -H "Content-Type: application/json" \
+        -d "{\"username\": \"seu_usuario\", \"password\": \"sua_senha\"}"
 
     """
-    user = get_user(credentials.username)
+
+    return await process_login(credentials.username, credentials.password)
+
+# Rota para OAuth2/Swagger (form data)
+@router.post("/oauth_login",
+             summary="Login alternativo (OAUTH)",
+             description="Rota usada para autenticação global no Swagger UI"
+             )
+async def login_oauth(form_data: OAuth2PasswordRequestForm = Depends()):
+    return await process_login(form_data.username, form_data.password)
+
+
+async def process_login(username: str, password: str):
+    user = get_user(username)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Usuário não encontrado"
         )
-    if not verify_password(credentials.password, user.hashed_password):
+    if not verify_password(password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Senha incorreta"

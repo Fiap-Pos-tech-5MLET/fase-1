@@ -30,16 +30,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Incluindo rotas de AUTENTICAÇÃO
+app.include_router(login.router)
+app.include_router(register.router)
+
 # Incluindo rotas da API
 app.include_router(producao.router)
 app.include_router(comercializacao.router)
 app.include_router(processamento.router)
 app.include_router(exportacao.router)
 app.include_router(importacao.router)
-
-# Incluindo rotas de AUTENTICAÇÃO
-app.include_router(login.router)
-app.include_router(register.router)
 
 @app.get("/")
 async def root():

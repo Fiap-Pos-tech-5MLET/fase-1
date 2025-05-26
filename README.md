@@ -1,3 +1,7 @@
+# Arquitetura
+![alt text](docs/api_fase1_v3.jpg) 
+
+
 # Executar localmente
 uvicorn app.main:app --reload
 

@@ -1,5 +1,5 @@
 # Arquitetura
-![alt text](docs/api_fase1_v3.jpg) 
+![alt text](docs/imgs/api_fase1.jpg) 
 
 
 # Executar localmente

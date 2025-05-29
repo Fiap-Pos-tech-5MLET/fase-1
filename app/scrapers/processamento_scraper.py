@@ -25,7 +25,7 @@ class ProcessamentoScraper(BaseScraper):
             product_cell, quantity_cell = cells
                 # Identifica o tipo do item, se cabeçalho ou itens
             if 'tb_item' in product_cell.get('class', []) or 'tb_subitem' in product_cell.get('class', []):
-                current_category = product_cell.get_text(strip=True) if 'tb_item' in product_cell.get('class', []) and current_category == '' else current_category
+                current_category = product_cell.get_text(strip=True) if 'tb_item' in product_cell.get('class', []) else current_category
                 data.append({
                     'categoria': current_category,
                     'subcategoria': product_cell.get_text(strip=True) if  'tb_subitem' in product_cell.get('class', []) else '-',

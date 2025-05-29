@@ -12,28 +12,9 @@ router = APIRouter(
 )
 
 @router.get(
-    "/processamento/{year}/{tipo_processamento}",
+    "/processamento/{ano}/{tipo_processamento}",
     response_model=ScrapingResponse,
     summary="Consultar processamento por ano e tipo",
-    description="""
-Retorna os dados de processamento de uvas por ano e tipo de categoria de uva.
-
-Esta rota é protegida. Requer token JWT válido no header da requisição.
-
-### Tipos válidos de `tipo_processamento`:
-- **viniferas**
-- **americanas_hibridas**
-- **uvas_mesa**
-- **sem_classificacao**
-
-### Exemplo de requisição com `curl`:
-```bash
-curl -X GET "http://localhost:8000/api/processamento/2023/viniferas" \\
-     -H "Authorization: Bearer <seu_token>"
-```
-
-Se não for possível acessar os dados ao vivo, a API tentará retornar os dados armazenados em cache.
-""",
     responses={
         200: {
             "description": "Dados encontrados com sucesso (live ou cache)."
@@ -50,19 +31,29 @@ Se não for possível acessar os dados ao vivo, a API tentará retornar os dados
     }
 )
 async def route_get_producao_by_year(
-    year: int = datetime.now().year,
+    ano: int = datetime.now().year,
     tipo_processamento: str = None,
 ):
     """
-    Rota para obter o processamento de produtos por ano e tipo de processamento.
-    Apenas acessível com token JWT válido.
+    Rota para obter a quantidade de uvas processadas no Rio Grande do Sul por ano e tipo.
 
-    - **year**: ano desejado (ex: 2023)
-    - **tipo_processamento**: tipo da categoria de uva
-        - viniferas
-        - americanas_hibridas
-        - uvas_mesa
-        - sem_classificacao
+    Esta rota é **protegida** e requer um token JWT válido no header da requisição.
+
+    As categorias disponíveis são:
+    - `viniferas`
+    - `americanas_hibridas`
+    - `uvas_mesa`
+    - `sem_classificacao`
+
+    ### Parâmetros:
+    - `ano`: Ano da consulta (obrigatório)
+    - `tipo_processamento`: Tipo de processamento (obrigatório)
+
+    ### Exemplo de requisição com `curl`:
+
+    ```bash
+    curl -X GET "http://localhost:8000/api/exportacao/2022/espumantes" \
+        -H "Authorization: Bearer <seu_token>"
     """
     def get_url(year: int, tipo_processamento: str):
         dict_sub_opcao = {
@@ -78,7 +69,7 @@ async def route_get_producao_by_year(
             raise HTTPException(status_code=400, detail="Ano inválido.")
         return f"/index.php?opcao=opt_03&subopcao={sub_opcao}&ano={year}"
 
-    url = get_url(year, tipo_processamento)
+    url = get_url(ano, tipo_processamento)
     scraper = ProcessamentoScraper()
     try:
         return ScrapingResponse(status="success", data=scraper.get_content(url), source="live")

@@ -8,21 +8,11 @@ router = APIRouter(
     tags=["Comercialização"],
     dependencies=[Depends(get_current_user)])
 
-
-#@router.get("/comercializacao", response_model=ScrapingResponse)
-#async def route_get_comercializacao(current_user: dict = Depends(get_current_user)):
- #   """
-  #  Rota para obter a comercialização de produtos do último ano disponível.
-  #  Requer autenticação JWT.
-   # """
-   # return get_comercializacao(None)
-
-
-@router.get("/comercializacao/{year}", 
+@router.get("/comercializacao/{ano}",
             response_model=ScrapingResponse, 
             summary="Consultar Comercialização por ano")
 
-async def route_get_comercializacao(year: int, current_user: dict = Depends(get_current_user)):
+async def route_get_comercializacao(ano: int, current_user: dict = Depends(get_current_user)):
     """
     Rota para obter os dados de comercialização de vinhos e derivados no Rio Grande do Sul por ano.
 
@@ -37,7 +27,7 @@ async def route_get_comercializacao(year: int, current_user: dict = Depends(get_
         -H "Authorization: Bearer <seu_token>"
 
     """
-    return get_comercializacao(year)
+    return get_comercializacao(ano)
 
 
 def get_comercializacao(year: int):

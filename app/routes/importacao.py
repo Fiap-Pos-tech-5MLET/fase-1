@@ -11,12 +11,11 @@ router = APIRouter(
     dependencies=[Depends(get_current_user)])
 
 
-@router.get("/importacao/{year}/{tipo_importacao}", response_model=ScrapingResponse, summary="Consultar Importação por ano e por tipo")
+@router.get("/importacao/{ano}/{tipo_importacao}", response_model=ScrapingResponse, summary="Consultar Importação por ano e por tipo")
 async def route_get_importacoes(
-    year: int = datetime.now().year,
+    ano: int = datetime.now().year,
     tipo_importacao: str = None,
-    current_user: dict = Depends(get_current_user),
-    summary="Consultar Importação por ano e por tipo"
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Rota para obter os dados de importação de derivados de uva do Rio Grande do Sul por ano e tipo de produto.
@@ -32,12 +31,12 @@ async def route_get_importacoes(
 
     ### Parâmetros:
     - `ano`: Ano da consulta (obrigatório)
-    - `categoria`: Tipo de produto importado (obrigatório)
+    - `tipo_importacao`: Tipo de produto importado (obrigatório)
 
     ### Exemplo de requisição com `curl`:
 
     ```bash
-    curl -X GET "http://localhost:8000/api/importacao/2023?categoria=vinhos_de_mesa" \
+    curl -X GET "http://localhost:8000/api/importacao/2023/vinhos_de_mesa" \
         -H "Authorization: Bearer <seu_token>"
 
     """
@@ -47,7 +46,7 @@ async def route_get_importacoes(
             "espumantes":     "subopt_02",
             "uvas_frescas":   "subopt_03",
             "uvas_passas":    "subopt_04",
-            "suco_uva":       "subopt_05",
+            "suco_de_uva":    "subopt_05",
         }
         sub_opcao = dict_sub_opcao.get(tipo_importacao.lower())
         if not sub_opcao:
@@ -56,7 +55,7 @@ async def route_get_importacoes(
             raise HTTPException(status_code=400, detail="Ano inválido.")
         return f"/index.php?opcao=opt_05&subopcao={sub_opcao}&ano={year}"
 
-    url = get_url(year, tipo_importacao)
+    url = get_url(ano, tipo_importacao)
     scraper = ImportacaoScraper()
 
     try:

@@ -20,8 +20,8 @@ class ExportacaoScraper(BaseScraper):
 
         table = soup.find('table', {'class': 'tb_base tb_dados'})
         data = []
-
-        for row in table.find_all('tr'):
+        tbody = table.find('tbody')
+        for row in tbody.find_all('tr'):
             cells = row.find_all(['td'])
 
             if len(cells) != 3:
@@ -31,7 +31,7 @@ class ExportacaoScraper(BaseScraper):
 
             data.append({
                 'categoria': categoria,
-                'subcategoria': pais_cell.get_text(strip=True),
+                'pais': pais_cell.get_text(strip=True),
                 'quantidade': quantidade_cell.get_text(strip=True),
                 'valor': valor_cell.get_text(strip=True)
             })

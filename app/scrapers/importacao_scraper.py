@@ -33,8 +33,8 @@ class ImportacaoScraper(BaseScraper):
         categoria = parte.split(" [", 1)[0]
 
         data = []
-
-        for row in table.find_all('tr'):
+        tbody = table.find('tbody')
+        for row in tbody.find_all('tr'):
             cells = row.find_all(['td'])
 
             # Esperamos exatamente 3 colunas: país, quantidade, valor

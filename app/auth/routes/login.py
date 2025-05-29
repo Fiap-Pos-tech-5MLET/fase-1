@@ -1,4 +1,5 @@
 # auth/routes/login.py
+import os
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
@@ -8,6 +9,11 @@ from app.auth.schemas.password_handler import verify_password
 from app.auth.schemas.jwt_handler import create_access_token
 from app.auth.schemas.token import Token
 from app.auth.schemas.dependencies import get_user
+
+from dotenv import load_dotenv
+load_dotenv()
+
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
 
 router = APIRouter(prefix="/api",
     tags=["Login"])
@@ -25,7 +31,7 @@ async def login(credentials: LoginInput):
 
     ### Detalhes da requisição:
     - Método: `POST`
-    - Endpoint: `/login`
+    - Endpoint: `/api/login`
     - Tipo de conteúdo: `application/json`
     - Parâmetros:
     - `username`: Nome de usuário registrado.
@@ -41,15 +47,6 @@ async def login(credentials: LoginInput):
 
     return await process_login(credentials.username, credentials.password)
 
-# Rota para OAuth2/Swagger (form data)
-@router.post("/oauth_login",
-             summary="Login alternativo (OAUTH)",
-             description="Rota usada para autenticação global no Swagger UI"
-             )
-async def login_oauth(form_data: OAuth2PasswordRequestForm = Depends()):
-    return await process_login(form_data.username, form_data.password)
-
-
 async def process_login(username: str, password: str):
     user = get_user(username)
     if not user:
@@ -63,7 +60,7 @@ async def process_login(username: str, password: str):
             detail="Senha incorreta"
         )
 
-    access_token_expires = timedelta(minutes=30)
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username},
         expires_delta=access_token_expires

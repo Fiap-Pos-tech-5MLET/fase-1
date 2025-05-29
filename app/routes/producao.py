@@ -8,22 +8,7 @@ router = APIRouter(
     tags=["Produção"],
     dependencies=[Depends(get_current_user)])
 
-#@router.get("/producao", response_model=ScrapingResponse, responses={
- #       200: {"description": "Dados de produção retornados com sucesso"},
-  #      401: {"description": "Token JWT ausente ou inválido"},
-   
-   #     500: {"description": "Erro ao processar os dados"}
- #   },
-   # summary="Consultar pordução por ano")
-#async def route_get_producao(current_user: dict = Depends(get_current_user)):
-    #"""
-    #Rota para obter a produção de produtos do último ano disponível. \n
-    #Requer autenticação JWT. \n
-    #Para consultar um ano específico, use a rota com filtro de ano
-    #"""
-    #return get_producao(None)
-
-@router.get("/producao/{year}", response_model=ScrapingResponse, responses={
+@router.get("/producao/{ano}", response_model=ScrapingResponse, responses={
         200: {"description": "Dados de produção retornados com sucesso"},
         401: {"description": "Token JWT ausente ou inválido"},
         404: {"description": "Ano não encontrado ou dados indisponíveis"},
@@ -31,7 +16,7 @@ router = APIRouter(
     },
     summary="Consultar produção por ano")
 
-async def route_get_producao_by_year(year: int, current_user: dict = Depends(get_current_user)):
+async def route_get_producao_by_year(ano: int, current_user: dict = Depends(get_current_user)):
     """
     Rota para obter a produção de vinhos, sucos e derivados do Rio Grande do Sul por ano.
 
@@ -45,7 +30,7 @@ async def route_get_producao_by_year(year: int, current_user: dict = Depends(get
     curl -X GET "http://localhost:8000/api/producao/2022" \
         -H "Authorization: Bearer <seu_token>"
 """
-    return get_producao(year)
+    return get_producao(ano)
 
 def get_producao(year: int):
     """

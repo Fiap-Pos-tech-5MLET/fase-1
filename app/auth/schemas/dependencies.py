@@ -2,14 +2,14 @@
 # auth/schemas/dependencies.py
 # ===========================
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from .token import TokenData
 from ..models.user import User, UserInDB
 from .jwt_handler import SECRET_KEY, ALGORITHM
 import json
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/oauth_login")
+security = HTTPBearer()
 
 def get_user(username: str):
     try:
@@ -21,13 +21,14 @@ def get_user(username: str):
     except FileNotFoundError:
         return None
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
+        token = credentials.credentials
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:

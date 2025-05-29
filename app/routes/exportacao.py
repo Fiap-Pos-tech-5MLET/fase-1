@@ -11,8 +11,8 @@ router = APIRouter(  prefix="/api",
     dependencies=[Depends(get_current_user)])
 
 
-@router.get("/exportacao/{year}/{tipo_exportacao}", response_model=ScrapingResponse, summary="Consultar Exportação por ano e por tipo")
-async def route_get_exportacao(year: int = datetime.now().year, tipo_exportacao: str = None,  current_user: dict = Depends(get_current_user)):
+@router.get("/exportacao/{ano}/{tipo_exportacao}", response_model=ScrapingResponse, summary="Consultar Exportação por ano e por tipo")
+async def route_get_exportacao(ano: int = datetime.now().year, tipo_exportacao: str = None,  current_user: dict = Depends(get_current_user)):
     """
     Rota para obter os dados de exportação de derivados de uva do Rio Grande do Sul por ano e tipo de produto.
 
@@ -26,12 +26,12 @@ async def route_get_exportacao(year: int = datetime.now().year, tipo_exportacao:
 
     ### Parâmetros:
     - `ano`: Ano da consulta (obrigatório)
-    - `categoria`: Tipo de produto exportado (obrigatório)
+    - `tipo_exportacao`: Tipo de produto exportado (obrigatório)
 
     ### Exemplo de requisição com `curl`:
 
     ```bash
-    curl -X GET "http://localhost:8000/api/exportacao/2022?categoria=espumantes" \
+    curl -X GET "http://localhost:8000/api/exportacao/2022/espumantes" \
         -H "Authorization: Bearer <seu_token>"
     """
     def get_url(year: int, tipo_exportacao: str):
@@ -39,8 +39,7 @@ async def route_get_exportacao(year: int = datetime.now().year, tipo_exportacao:
             "vinhos_de_mesa": "subopt_01",
             "espumantes": "subopt_02",
             "uvas_frescas": "subopt_03",
-            "uvas_passas": "subopt_04",
-            "suco_uva": "subopt_05"
+            "suco_de_uva": "subopt_04"
         }
         sub_opcao = dict_sub_opcao.get(tipo_exportacao.lower())
         if not sub_opcao:
@@ -49,7 +48,7 @@ async def route_get_exportacao(year: int = datetime.now().year, tipo_exportacao:
             raise HTTPException(status_code=400, detail="Ano inválido.")
         return f"/index.php?opcao=opt_06&subopcao={sub_opcao}&ano={year}"
 
-    url = get_url(year, tipo_exportacao)
+    url = get_url(ano, tipo_exportacao)
     scraper = ExportacaoScraper()
     try:
         return ScrapingResponse(status="success", data=scraper.get_content(url), source="live")

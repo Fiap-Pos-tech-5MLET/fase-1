@@ -74,6 +74,7 @@ gerando previsões atualizadas conforme novos dados chegam.
 
 
 # Estrutura da API
+```text
 app/
 ├── main.py                # Ponto de entrada da API (FastAPI app)
 ├── config.py              # Configurações da aplicação (variáveis de ambiente, constantes)
@@ -114,3 +115,4 @@ app/
 └── utils/                 # Funções auxiliares (validação, formatação, helpers em geral)
     ├── __init__.py
     └── helpers.py
+```

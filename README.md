@@ -45,7 +45,7 @@ Swagger UI: http://localhost:8000/docs
 ReDoc: http://localhost:8000/redoc
 
 # Acesso do projeto em Produção
-[API fase 1](https://techchallenge-fase1-three.vercel.app/)
+[API fase 1](https://fase-1-hkv8.onrender.com/docs#/Login/register_api_register_post)
 
 
 # Arquitetura

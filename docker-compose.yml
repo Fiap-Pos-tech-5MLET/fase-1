@@ -1,0 +1,12 @@
+services:
+  fastapi:
+    build: .
+    environment:
+      - PROJECT_NAME=API 5MLET - Dados da Vitivinicultura
+      - SECRET_KEY=5MLET
+      - BASE_URL=http://vitibrasil.cnpuv.embrapa.br
+      - HTML_CACHE_DIR=./data/html_cache
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - ALGORITHM=HS256
+      - USERNAME_TEST=usuarioteste
+      - PASSWORD_TEST=senha123

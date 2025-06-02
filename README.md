@@ -1,5 +1,9 @@
 # API EMBRAPA
 
+Link para o `video explicativo da api` e seu desenvolvimento
+https://drive.google.com/file/d/1RdPXZwYWWSxSumIwnTnD4O4jX7k8ql-v/view?usp=sharing
+
+
 # Sobre a API
 Esta é uma API RESTful desenvolvida com o framework FastAPI, que fornece acesso
 aos dados públicos disponibilizados pelo site da Embrapa Vitibrasil, especificamente 
@@ -30,12 +34,35 @@ cadastrados tenham acesso aos dados estruturados da Embrapa Vitibrasil.
 
 # Pare Executar localmente
 
+
+1- Clone o repositório
 ```shell
-uvicorn app.main:app --reload
+    git clone https://github.com/seu-usuario/seu-repositorio.git
+    cd seu-repositorio
 ```
-# Para Executar testes
+
+2- Crie o arquivo .env a partir do .env.example
 ```shell
-pytest tests/ -v
+    cp .env.example .env
+```
+
+3- Crie um ambiente virtual (opcional, mas recomendado)
+```shell
+    python -m venv venv
+    source venv/bin/activate  # Linux/Mac
+    .\venv\Scripts\activate    # Windows
+```
+4- Instale as dependências
+```shell
+    pip install -r requirements.txt
+```
+5- Rode a API
+```shell
+    uvicorn app.main:app --reload 
+```
+6- Para rodar os testes
+```shell
+    pytest tests/ -v
 ```
 # Documentação Automática
 A FastAPI gera automaticamente documentação interativa:
@@ -116,3 +143,11 @@ app/
     ├── __init__.py
     └── helpers.py
 ```
+
+
+Desenvolvido por:
+- RM364306-Lucas Felipe de Jesus Machado
+- RM364480-Antônio Teixeira Santana Neto
+- RM364538-Gabriela Moreno Rocha dos Santos
+- RM364379-Erik Douglas Alves Gomes
+- RM364648-Leonardo Fernandes Soares

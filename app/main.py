@@ -13,19 +13,14 @@ settings = get_settings()
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description= (
-    "API para extrair informações do site vitibrasil e retornar em JSON. \n\n"
-    "## Autenticação\n\n"
-    "Para testar rotas protegidas no Swagger UI:\n"
-    "1. Se registrar em /api/register \n"
-    "2. Clique em 'Authorize' no topo da página\n"
-    "3. Digite suas credenciais (username/password)\n"
-    "4. O sistema fará login automaticamente\n"
-    "5. Todas as rotas protegidas funcionarão\n"
-
-    # "Para acessar os dados protegidos, você deve: \n"
-    # "- Se registrar em /register \n"
-    # "- e depois fazer login em /login para obter um token JWT.\n"
-
+        "API para extrair informações do site vitibrasil e retornar em JSON. \n\n"
+        "## Autenticação\n\n"
+        "Para testar rotas protegidas no Swagger UI:\n"
+        "1. Se registrar em /api/register \n"
+        "2. Depois fazer login em /api/login para obter um token JWT.\n"
+        "3. Clique em 'Authorize' no topo da página\n"
+        "4. Informe o access_token (obtido na rota de login) no campo value e clique em Authorize\n"
+        "5. Com o Token valido, todas as rotas protegidas funcionarão\n"
       ),
     version="1.0.0",
     tags=["Home"]

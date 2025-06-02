@@ -37,8 +37,8 @@ cadastrados tenham acesso aos dados estruturados da Embrapa Vitibrasil.
 
 1- Clone o repositório
 ```shell
-    git clone https://github.com/seu-usuario/seu-repositorio.git
-    cd seu-repositorio
+    git clone https://github.com/Fiap-Pos-tech-5MLET/fase-1
+    cd fase-1
 ```
 
 2- Crie o arquivo .env a partir do .env.example
